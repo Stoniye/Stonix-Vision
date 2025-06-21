@@ -4,7 +4,7 @@ For those who are interested, the name is simply a technical version of my usern
 
 # Stonix-Vision
 Stonix Vision is the image recognition branch of Stonix.
-I’m also working on a chat version of Stonix: [Stonix PSL](https://github.com/Stoniye/Stonix-PSL)
+I’m also working on a language model for Stonix: [Stonix PSL](https://github.com/Stoniye/Stonix-PSL)
 
 # Perzeptron Model
 The Perzeptron model is essentially a simple image recognition model — more like a "Yes/No" classifier.
