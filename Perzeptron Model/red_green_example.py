@@ -32,55 +32,56 @@ def load_weights_and_bias(model, filename):
 
 def generate_pixel_data(num_samples):
     data = []
-    for _ in range(num_samples // 2):
-        g = random.randint(150, 255)
-        r = random.randint(0, 100)
-        data.append(((r, g), 0))
 
-    for _ in range(num_samples // 2):
-        r = random.randint(150, 255)
-        g = random.randint(0, 100)
-        data.append(((r, g), 1))
+    for _ in range(num_samples):
+        r = 0
+        g = 0
+        color = 0
+        if random.randint(0, 1) == 1:
+            g = random.randint(150, 255)
+            r = random.randint(0, 100)
+            color = 0
+        else:
+            r = random.randint(150, 255)
+            g = random.randint(0, 100)
+            color = 1
+        data.append(((r / 255.0, g / 255.0), color))
 
     random.shuffle(data)
     return data
 
 if __name__ == "__main__":
-    training_data = generate_pixel_data(num_samples=200)
+    training_data = generate_pixel_data(num_samples=200) #generate random pixel for training data
 
-    stonixVision = perceptron.Perceptron(num_inputs=2, learning_rate=0.05)
+    stonix = perceptron.Perceptron(num_inputs=2, learning_rate=0.05) #initialize model
 
-    if not load_weights_and_bias(stonixVision, filename="red_green_model"):
+    #load parameters or train new
+    if not load_weights_and_bias(stonix, filename="red_green_model"):
         print("Start training")
-        stonixVision.train(training_data, epochs=1000)
+        stonix.train(training_data, epochs=100)
         print("Finished training")
-        save_weights_and_bias(stonixVision, filename="red_green_model")
+        save_weights_and_bias(stonix, filename="red_green_model")
     else:
         print("Loaded model Parameters")
 
     print("\nStarting Test")
 
-    red_pixel = (200, 50)
-    norm_red_pixel = (red_pixel[0] / 255.0, red_pixel[1] / 255.0)
-    prediction_red = stonixVision.predict(norm_red_pixel)
-    print(f"Pixel (R={red_pixel[0]}, G={red_pixel[1]}) -> Prediction: {'Red' if prediction_red == 1 else 'Green'} (Expected: Red)")
+    #Test model on random pixels
+    test_num = 5
 
-    green_pixel = (50, 200)
-    norm_green_pixel = (green_pixel[0] / 255.0, green_pixel[1] / 255.0)
-    prediction_green = stonixVision.predict(norm_green_pixel)
-    print(f"Pixel (R={green_pixel[0]}, G={green_pixel[1]}) -> Prediction: {'Red' if prediction_green == 1 else 'Green'} (Expected: Green)")
+    for _ in range(test_num):
+        r = 0
+        g = 0
+        color = 0
+        if random.randint(0, 1) == 1:
+            g = random.randint(150, 255)
+            r = random.randint(0, 100)
+            color = 0
+        else:
+            r = random.randint(150, 255)
+            g = random.randint(0, 100)
+            color = 1
 
-    slightly_red_pixel = (180, 100)
-    norm_slightly_red_pixel = (slightly_red_pixel[0] / 255.0, slightly_red_pixel[1] / 255.0)
-    prediction_s_red = stonixVision.predict(norm_slightly_red_pixel)
-    print(f"Pixel (R={slightly_red_pixel[0]}, G={slightly_red_pixel[1]}) -> Prediction: {'Red' if prediction_s_red == 1 else 'Green'} (Expected: Red)")
-
-    slightly_green_pixel = (100, 180)
-    norm_slightly_green_pixel = (slightly_green_pixel[0] / 255.0, slightly_green_pixel[1] / 255.0)
-    prediction_s_green = stonixVision.predict(norm_slightly_green_pixel)
-    print(f"Pixel (R={slightly_green_pixel[0]}, G={slightly_green_pixel[1]}) -> Prediction: {'Red' if prediction_s_green == 1 else 'Green'} (Expected: Green)")
-
-    neutral_pixel = (128, 128)
-    norm_neutral_pixel = (neutral_pixel[0] / 255.0, neutral_pixel[1] / 255.0)
-    prediction_neutral = stonixVision.predict(norm_neutral_pixel)
-    print(f"Pixel (R={neutral_pixel[0]}, G={neutral_pixel[1]}) -> Prediction: {'Red' if prediction_neutral == 1 else 'Green'} (Expected: Random)")
+        pixel = (r / 255.0, g / 255.0)
+        prediction = stonix.predict(pixel)
+        print(f"Color: (R={pixel[0]}, G={pixel[1]}) > Prediction: {'Red' if prediction == 1 else 'Green'}  (Expected: {'Red' if color == 1 else 'Green'})")
